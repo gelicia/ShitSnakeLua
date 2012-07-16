@@ -82,8 +82,8 @@ function love.update(dt)
     				snake.trudCount = snake.trudCount + 5
     			end
 
-    			for i=1, #truds, 1 do
-    				if isOverlapping(newCoord, truds[i]) then
+    			for i, trud in ipairs(truds) do
+					if isOverlapping(newCoord, trud) then
     					table.remove(truds, i)
     					snake.length = snake.length + 5
     					snake.trudCount = snake.trudCount + 5
@@ -107,21 +107,21 @@ function love.draw( )
 	end
 
 --draw snake
-	for i=1, #snake.body, 1 do
+	for i, bodySeg in ipairs(snake.body) do
 		if i == #snake.body then
 			love.graphics.setColor(224, 109, 27)
 		else
 			love.graphics.setColor(0, 255, 0)
 		end
-		love.graphics.rectangle( "fill", snake.body[i].x * TILESIZE, snake.body[i].y * TILESIZE, TILESIZE, TILESIZE)
+		love.graphics.rectangle( "fill", bodySeg.x * TILESIZE, bodySeg.y * TILESIZE, TILESIZE, TILESIZE)
 	end
 
 --draw truds
 	love.graphics.setColor(156, 93, 26)
-	for i=1, #truds, 1 do
-		love.graphics.rectangle( "fill", truds[i].x * TILESIZE, truds[i].y * TILESIZE, TILESIZE, TILESIZE)
-	end
 
+	for _, trud in ipairs(truds) do
+		love.graphics.rectangle( "fill", trud.x * TILESIZE, trud.y * TILESIZE, TILESIZE, TILESIZE)
+	end
 end
 
 function isValid(coord)
@@ -129,11 +129,12 @@ function isValid(coord)
 		return false
 	else 
 		--self consumption check
-		for i = 1, #snake.body, 1 do
-			if isOverlapping(coord, snake.body[i]) then
+		for _, bodySeg in ipairs(snake.body) do
+			if isOverlapping(coord, bodySeg) then
 				return false
 			end
 		end
+		
 		return true
 	end
 end
